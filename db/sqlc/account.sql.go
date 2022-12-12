@@ -60,6 +60,16 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 	return i, err
 }
 
+const deleteAccount = `-- name: DeleteAccount :exec
+DELETE FROM accounts
+WHERE id = $1
+`
+
+func (q *Queries) DeleteAccount(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteAccount, id)
+	return err
+}
+
 const getAccount = `-- name: GetAccount :one
 SELECT id, user_id, category_id, title, type, description, value, date, created_at FROM accounts
 WHERE id = $1 LIMIT 1
